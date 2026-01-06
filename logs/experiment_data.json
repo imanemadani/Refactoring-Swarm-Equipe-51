@@ -1,23 +1,86 @@
 [
-  {
-    "id": "9e82e9b0-9b43-4a78-af43-d5d5ef848a2f",
-    "timestamp": "2025-12-26T01:26:41.177789",
-    "agent": "System",
-    "model": "unknown",
-    "action": "STARTUP",
-    "details": "Target: ./sandbox",
-    "status": "INFO"
-  },
-  {
-    "id": "4fa08905-66a7-464b-a517-865b77650f67",
-    "timestamp": "2026-01-06T00:41:59.117771",
-    "agent": "Orchestrator",
-    "model": "None",
-    "action": "CODE_ANALYSIS",
-    "details": {
-      "input_prompt": "System Boot",
-      "output_response": "Initializing swarm on target directory: ."
+    {
+        "id": "9e82e9b0-9b43-4a78-af43-d5d5ef848a2f",
+        "timestamp": "2025-12-26T01:26:41.177789",
+        "agent": "System",
+        "model": "unknown",
+        "action": "STARTUP",
+        "details": "Target: ./sandbox",
+        "status": "INFO"
     },
-    "status": "SUCCESS"
-  }
+    {
+        "id": "4fa08905-66a7-464b-a517-865b77650f67",
+        "timestamp": "2026-01-06T00:41:59.117771",
+        "agent": "Orchestrator",
+        "model": "None",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "System Boot",
+            "output_response": "Initializing swarm on target directory: ."
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "2711a70e-c196-4cf6-974f-038fb95f89ea",
+        "timestamp": "2026-01-06T02:08:21.153403",
+        "agent": "System",
+        "model": "unknown",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "test",
+            "output_response": "test"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "c8d1698a-1a1b-4d40-b26c-29105be0c930",
+        "timestamp": "2026-01-06T02:24:09.667069",
+        "agent": "System",
+        "model": "unknown",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "test",
+            "output_response": "test"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "a7efa80e-f2c1-4819-bd38-bed94f97ced8",
+        "timestamp": "2026-01-06T20:46:34.872971",
+        "agent": "Auditor",
+        "model": "gemini-1.5-flash",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "file": "./sandbox\\test.py",
+            "input_prompt": "Analyze this file for bugs.",
+            "output_response": "Found 1 simulated bug."
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "037f9547-a64a-4d96-a238-202d3ac7e479",
+        "timestamp": "2026-01-06T20:57:06.793194",
+        "agent": "Auditor",
+        "model": "gemini-1.5-flash",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "file": "./sandbox\\test.py",
+            "input_prompt": "Analyze this file for bugs.",
+            "output_response": "Found 1 simulated bug."
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "fa0d613c-e3f7-4433-96e4-7d42b0a88288",
+        "timestamp": "2026-01-06T21:47:27.513574",
+        "agent": "Auditor",
+        "model": "gemini-1.5-flash",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "file": "./sandbox\\test.py",
+            "input_prompt": "Analyze this file for bugs.",
+            "output_response": "Found 1 simulated bug."
+        },
+        "status": "SUCCESS"
+    }
 ]
