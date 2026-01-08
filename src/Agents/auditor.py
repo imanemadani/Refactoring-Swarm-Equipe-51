@@ -1,6 +1,8 @@
 
 
-from src.utils.logger import Logger  # make sure logger is imported at the top
+# from src.utils.logger import Logger  # make sure logger is imported at the top
+from src.utils.logger_adapter import LoggerAdapter
+from src.utils.logger import ActionType
 
 class AuditorAgent:
     def __init__(self, llm_client, logger):
@@ -23,7 +25,7 @@ Respond in a comprehensive and structured way so the Fixer agent can clearly fol
         self.logger.log(
             input_prompt=prompt,
             output_response=response,
-            action_type="ANALYSIS"
+            action_type=ActionType.ANALYSIS 
         )
         
         return response

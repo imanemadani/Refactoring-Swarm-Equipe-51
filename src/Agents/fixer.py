@@ -1,4 +1,4 @@
-from src.utils.logger import Logger  # make sure logger is imported at the top
+from src.utils.logger_adapter import LoggerAdapter
 
 class FixerAgent:
     def __init__(self, llm_client, logger):

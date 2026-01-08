@@ -1,4 +1,4 @@
-from src.utils.logger import Logger  # make sure logger is imported at the top
+from src.utils.logger_adapter import LoggerAdapter
 
 class JudgeAgent:
     def __init__(self, llm_client, logger):
@@ -21,7 +21,7 @@ Respond clearly so it can be interpreted automatically."""
         self.logger.log(
             input_prompt=prompt,
             output_response=test_result,
-            action_type="JUDGE"
+            action_type="DEBUG"
         )
         
         return test_result
