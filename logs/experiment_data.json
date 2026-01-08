@@ -1,23 +1,73 @@
 [
-  {
-    "id": "9e82e9b0-9b43-4a78-af43-d5d5ef848a2f",
-    "timestamp": "2025-12-26T01:26:41.177789",
-    "agent": "System",
-    "model": "unknown",
-    "action": "STARTUP",
-    "details": "Target: ./sandbox",
-    "status": "INFO"
-  },
-  {
-    "id": "4fa08905-66a7-464b-a517-865b77650f67",
-    "timestamp": "2026-01-06T00:41:59.117771",
-    "agent": "Orchestrator",
-    "model": "None",
-    "action": "CODE_ANALYSIS",
-    "details": {
-      "input_prompt": "System Boot",
-      "output_response": "Initializing swarm on target directory: ."
+    {
+        "id": "9e82e9b0-9b43-4a78-af43-d5d5ef848a2f",
+        "timestamp": "2025-12-26T01:26:41.177789",
+        "agent": "System",
+        "model": "unknown",
+        "action": "STARTUP",
+        "details": "Target: ./sandbox",
+        "status": "INFO"
     },
-    "status": "SUCCESS"
-  }
+    {
+        "id": "4fa08905-66a7-464b-a517-865b77650f67",
+        "timestamp": "2026-01-06T00:41:59.117771",
+        "agent": "Orchestrator",
+        "model": "None",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "System Boot",
+            "output_response": "Initializing swarm on target directory: ."
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "9e7c1f97-48a7-48aa-8904-c45ed2d23d61",
+        "timestamp": "2026-01-06T12:09:14.142725",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "file_analyzed": "test.py",
+            "input_prompt": "Test",
+            "output_response": "OK",
+            "issues_found": 0
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "cc2eec96-4cfe-4e96-822d-9b4b724ba913",
+        "timestamp": "2026-01-06T16:20:47.838917",
+        "agent": "Auditor",
+        "model": "gpt-4",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Analyze bad_code.py",
+            "output_response": "Found unused variables"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "d71958f4-9f93-41b6-8e32-f69947577ac1",
+        "timestamp": "2026-01-06T16:20:47.852190",
+        "agent": "Fixer",
+        "model": "gpt-4",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Fix indentation",
+            "output_response": "Indentation fixed"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "30710ac1-5ac9-4e46-a93e-9c9a9d29947a",
+        "timestamp": "2026-01-06T16:20:47.889824",
+        "agent": "Judge",
+        "model": "gpt-4",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Run tests",
+            "output_response": "2 tests failed"
+        },
+        "status": "FAILURE"
+    }
 ]
