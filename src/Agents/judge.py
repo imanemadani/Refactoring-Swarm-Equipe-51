@@ -1,28 +1,27 @@
-from src.utils.logger_adapter import LoggerAdapter
+from src.Prompts.Prompts import JUDGE_PROMPT
+from src.utils.logger import log_experiment, ActionType
 
 class JudgeAgent:
-    def __init__(self, llm_client, logger):
+    def __init__(self, llm_client, model_name="gpt-4"):
         self.llm = llm_client
-        self.logger = logger
+        self.model_name = model_name  # optional: allow multiple models
 
     def judge(self, code):
-    
-        prompt = """Act like a Python expert and a Tester expert
-Run pytest on this Python file and return the result. 
-if all tests pass, return "SUCCESS" 
-If any test fails, return "FAIL" and include the errors in a structured way. 
-Do not make any code modifications. 
-Respond clearly so it can be interpreted automatically."""
-        
+        prompt = JUDGE_PROMPT  # load prompt from separate file
+
         # Send prompt + code to LLM
         test_result = self.llm.send(prompt, code)
-        
-        # Log the interaction
-        self.logger.log(
-            input_prompt=prompt,
-            output_response=test_result,
-            action_type="DEBUG"
-        )
-        
-        return test_result
 
+        # Log using Quality Manager function (mandatory)
+        log_experiment(
+            agent_name="Judge",
+            model_used=self.model_name,
+            action=ActionType.DEBUG,
+            details={
+                "input_prompt": prompt,
+                "output_response": test_result
+            },
+            status="SUCCESS"
+        )
+
+        return test_result

@@ -1,78 +1,148 @@
 import argparse # listen for instructions from the terminal
-import os # allow to touch files and look into folders on the system
-import sys # access to system-specific parameters (standard)
+import os # allow us to touch files and look into folders on the system (os.path.exists,os.listdir,os.path.join,...)
+import sys #allow us to access to system-specific parameters (standard)
 
 
-# Path check: This looks inside the /src folder for the logger
+# Path check: This looks inside the /src folder for the logger and the enum
 from src.utils.logger import log_experiment, ActionType
+from src.utils.tools.file_tools import read_file  # toolsmith
+from src.utils.tools.file_tools import write_file #toolsmith
+from src.Agents.auditor import AuditorAgent    # AI engineer
+from src.Agents.fixer import FixerAgent  # AI engineer
+from src.Agents.judge import JudgeAgent  # AI engineer
+from src.utils.logger import Logger
 
 
-def run_auditor(file_path):
-    """The Conductor tells the Auditor to look at a file."""
-    print(f"  [Auditor] Analyzing: {file_path}")
+SANDBOX_DIR = "./sandbox" # hardcoded , like a default one --> can be overriden by --target_dir
+MAX_ATTEMPTS = 10
+
+
+class MockLLMClient:
+    def send(self, prompt, code):
+        return "Mock audit report: no real AI was used."
+
+
+
+
+parser = argparse.ArgumentParser() #create a parser object to handle command-line arguments
+parser.add_argument("--target_dir",type=str,required=True)  # mandatory argument
+args = parser.parse_args() #reads the argument from the command line --> accessed via:args.target_dir
+
+
+def get_python_files(target_dir):
+    #check if the folder exists
+    if not os.path.exists(target_dir):
+        print(f"The folder :{target_dir} doesn't exist")
+        return []
+
+
+    #folder exists : list all the files ending with .py
+    files = []
+    for f in os.listdir(target_dir):
+        if f.endswith('.py'):
+            files.append(f)
+
+
+    #return the list
+    return files
+
+
+def run_auditor(file_path, llm_client, logger):
+    print(f"The auditor is analysing the file : {file_path}")
+    #read file content
+    code_content = read_file(file_path)
+    # initialize the Auditor
+    auditor = AuditorAgent(llm_client=llm_client, logger=logger)
+    # sent content to Auditor
+    audit_report = auditor.analyze(code_content)
+    # return the plan
+    return audit_report
+
+
+def run_fixer(file_path, plan, llm_client, logger):    
+    print(f"The fixer is applying the plan to the file: {file_path}")
    
-    # These are the simulated contents for the AI
-    fake_prompt = "Analyze this file for bugs."
-    fake_response = "Found 1 simulated bug."
-   
-    # Log the action with the MANDATORY fields
-    log_experiment(
-        agent_name="Auditor",
-        model_used="gemini-1.5-flash",
-        action=ActionType.ANALYSIS,
-        details={
-            "file": file_path,
-            "input_prompt": fake_prompt,      # REQUIRED
-            "output_response": fake_response   # REQUIRED
-        },
-        status="SUCCESS"
-    )
-    return fake_response
+    # Read file content
+    code_content = read_file(file_path)
+    # Initialize the Fixer agent
+    fixer = FixerAgent(llm_client=llm_client, logger=logger)    
+    # Send code + plan to the fixer
+    fixed_code = fixer.fix(code_content, plan)
+    # Write the fixed code back so Judge tests the new version
+    write_file(file_path, fixed_code)
+    # Return the fixed code
+    return fixed_code
+
+
+def run_judge(file_path, llm_client, logger):
+    print(f"The judge is running tests on the file: {file_path}")
+    # Read file content
+    code_content = read_file(file_path)
+    # Initialize the Judge agent
+    judge = JudgeAgent(llm_client=llm_client, logger=logger)
+    # Send code to the judge
+    test_result = judge.judge(code_content)
+    # Return the test result
+    return test_result
 
 
 def orchestrate_swarm(target_dir):
-    """The main logic for the Self-Healing Loop."""
-    # 1. Validation: Does the folder exist?
-    if not os.path.exists(target_dir):
-        print(f"Error: Folder {target_dir} not found.")
-        return
-
-
-    # 2. Find files in /sandbox (as per your structure)
-    files = [f for f in os.listdir(target_dir) if f.endswith('.py')]
    
-    if not files:
-        print("No Python files to fix in sandbox.")
+    # --- 1. Initialize logger and LLM client ---
+    # Logger is responsible for logging all actions
+    logger = Logger()
+    # LLM client is a placeholder for now (Ilham will replace it later)
+    llm_client = MockLLMClient()
+
+
+    # --- 2. Get all Python files in the target directory ---
+    python_files = get_python_files(target_dir)
+    if not python_files:
+        print("No Python files found. Exiting.")
         return
 
 
-    for file_name in files:
+    # --- 3. Loop over each Python file ---
+    for file_name in python_files:
         file_path = os.path.join(target_dir, file_name)
-        print(f"\n--- Processing: {file_name} ---")
-       
+        print(f"\nProcessing file: {file_path}")
         attempts = 0
-        success = False
-       
-        # Self-healing loop: Max 10 tries
-        while not success and attempts < 10:
-            attempts += 1
-            print(f"  Attempt {attempts}...")
-           
-            # Step A: Auditor analyzes
-            report = run_auditor(file_path)
-           
-            # Step B/C: (Placeholder for Fixer and Judge)
-            # For today, we simulate that it works!
-            success = True
-           
-            if success:
-                print(f"  ✅ {file_name} fixed!")
+
+
+        # --- 4. Retry loop for self-healing ---
+        while attempts < MAX_ATTEMPTS:
+            print(f"Attempt {attempts + 1} of {MAX_ATTEMPTS} for {file_name}")
+
+
+            # 4a. Run Auditor to get the plan
+            plan = run_auditor(file_path, llm_client, logger)
+            print(f"Audit plan:\n{plan}")
+
+
+            # 4b. Run Fixer to apply the plan
+            fixed_code = run_fixer(file_path, plan, llm_client, logger)
+            print(f"Fixed code returned by fixer (first 200 chars):\n{fixed_code[:200]}")
+
+
+            # 4c. Run Judge to test the fixed code
+            test_result = run_judge(file_path, llm_client, logger)
+            print(f"Test result: {test_result}")
+
+
+            # 4d. Check if tests passed
+            if "SUCCESS" in test_result:
+                print(f"{file_name} passed tests after {attempts + 1} attempt(s).")
+                break  # file is fixed, move to next file
+            else:
+                print(f"{file_name} failed tests. Retrying...")
+                attempts += 1
+
+
+        # If we reach MAX_ATTEMPTS and still fail
+        if attempts == MAX_ATTEMPTS:
+            print(f"{file_name} could not be fixed after {MAX_ATTEMPTS} attempts.")
+
 
 
 if __name__ == "__main__":
-    # This is MANDATORY. The bot runs: python main.py --target_dir ./sandbox
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--target_dir", type=str, required=True)
-    args = parser.parse_args()
-   
     orchestrate_swarm(args.target_dir)
