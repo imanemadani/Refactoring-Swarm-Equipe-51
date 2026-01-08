@@ -1,73 +1,650 @@
 [
     {
-        "id": "9e82e9b0-9b43-4a78-af43-d5d5ef848a2f",
-        "timestamp": "2025-12-26T01:26:41.177789",
-        "agent": "System",
-        "model": "unknown",
-        "action": "STARTUP",
-        "details": "Target: ./sandbox",
-        "status": "INFO"
-    },
-    {
-        "id": "4fa08905-66a7-464b-a517-865b77650f67",
-        "timestamp": "2026-01-06T00:41:59.117771",
-        "agent": "Orchestrator",
-        "model": "None",
-        "action": "CODE_ANALYSIS",
-        "details": {
-            "input_prompt": "System Boot",
-            "output_response": "Initializing swarm on target directory: ."
-        },
-        "status": "SUCCESS"
-    },
-    {
-        "id": "9e7c1f97-48a7-48aa-8904-c45ed2d23d61",
-        "timestamp": "2026-01-06T12:09:14.142725",
-        "agent": "Auditor_Agent",
-        "model": "gemini-2.5-flash",
-        "action": "CODE_ANALYSIS",
-        "details": {
-            "file_analyzed": "test.py",
-            "input_prompt": "Test",
-            "output_response": "OK",
-            "issues_found": 0
-        },
-        "status": "SUCCESS"
-    },
-    {
-        "id": "cc2eec96-4cfe-4e96-822d-9b4b724ba913",
-        "timestamp": "2026-01-06T16:20:47.838917",
+        "id": "aa36d9d5-7459-466c-8540-4fd16d05c404",
+        "timestamp": "2026-01-08T15:52:41.220265",
         "agent": "Auditor",
-        "model": "gpt-4",
+        "model": "fake-llm",
         "action": "CODE_ANALYSIS",
         "details": {
-            "input_prompt": "Analyze bad_code.py",
-            "output_response": "Found unused variables"
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
         },
         "status": "SUCCESS"
     },
     {
-        "id": "d71958f4-9f93-41b6-8e32-f69947577ac1",
-        "timestamp": "2026-01-06T16:20:47.852190",
+        "id": "b8e87849-09ed-4752-b445-c8eb8bef4630",
+        "timestamp": "2026-01-08T15:52:41.224624",
         "agent": "Fixer",
-        "model": "gpt-4",
+        "model": "fake-llm",
         "action": "FIX",
         "details": {
-            "input_prompt": "Fix indentation",
-            "output_response": "Indentation fixed"
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
         },
         "status": "SUCCESS"
     },
     {
-        "id": "30710ac1-5ac9-4e46-a93e-9c9a9d29947a",
-        "timestamp": "2026-01-06T16:20:47.889824",
+        "id": "5bce5f62-ed71-4f44-b44e-9c3f62dedb25",
+        "timestamp": "2026-01-08T15:52:41.265085",
         "agent": "Judge",
-        "model": "gpt-4",
+        "model": "fake-llm",
         "action": "DEBUG",
         "details": {
-            "input_prompt": "Run tests",
-            "output_response": "2 tests failed"
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
         },
-        "status": "FAILURE"
+        "status": "SUCCESS"
+    },
+    {
+        "id": "c3e6c408-360e-4038-9d56-7822f27e0d73",
+        "timestamp": "2026-01-08T15:52:41.305939",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "c7c648c0-8169-4a41-95e8-1bea4ea13ace",
+        "timestamp": "2026-01-08T15:52:41.352345",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "480acfcc-820f-46ce-bda0-2cd2615bcc1a",
+        "timestamp": "2026-01-08T15:52:41.391071",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "06b8a163-810d-49a8-b7ce-184e8904755f",
+        "timestamp": "2026-01-08T15:52:41.436308",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "6f76f53d-5ded-4c88-b840-9cdbdc139af8",
+        "timestamp": "2026-01-08T15:52:41.480726",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "e77249db-7012-4505-9291-03a37b0dfa84",
+        "timestamp": "2026-01-08T15:52:41.525993",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "9c21162d-e9e9-48fc-a83c-aaee65623599",
+        "timestamp": "2026-01-08T15:52:41.566800",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "1a80b34d-b562-4f1a-8b89-267a79ac2371",
+        "timestamp": "2026-01-08T15:52:41.609150",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "cddab1ac-63f8-44d5-85d7-c84bcbd37d0c",
+        "timestamp": "2026-01-08T15:52:41.650944",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "d185fa3d-2ad6-4218-b7ff-016c18276325",
+        "timestamp": "2026-01-08T15:52:41.699124",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "edc9a57f-0556-4728-80e2-5058ede4bdca",
+        "timestamp": "2026-01-08T15:52:41.755338",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "ae3a6288-2d01-4a37-bb75-2ce3990f97ad",
+        "timestamp": "2026-01-08T15:52:41.814250",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "7c0c3992-e107-4573-9ab6-f907ad055e1e",
+        "timestamp": "2026-01-08T15:52:41.868106",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "f5a92e5c-7571-402c-940b-159fc039610c",
+        "timestamp": "2026-01-08T15:52:41.920248",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "5df256ef-22ec-4e43-b412-a75d988f578b",
+        "timestamp": "2026-01-08T15:52:41.968734",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "7096f212-4de7-491a-8717-ac17ebdf3011",
+        "timestamp": "2026-01-08T15:52:42.027384",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "8ab3d2f9-4375-448c-85d5-a4d0f74326a1",
+        "timestamp": "2026-01-08T15:52:42.080066",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "749ad8c9-acf7-4b0b-ab99-73ea6c26b0fb",
+        "timestamp": "2026-01-08T15:52:42.132658",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "5bca9bd1-4916-414d-ac95-3746d9672b21",
+        "timestamp": "2026-01-08T15:52:42.185376",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "295606e5-f21b-4572-8832-ca2b0ca57986",
+        "timestamp": "2026-01-08T15:52:42.252666",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "0851c577-5f3b-44b3-bfaf-d4ac4a1c8446",
+        "timestamp": "2026-01-08T15:52:42.311124",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "87de2a38-35aa-49f6-9e62-00bc31ff2d06",
+        "timestamp": "2026-01-08T15:52:42.358617",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "487eb21a-c043-40ab-8391-da32c3207f81",
+        "timestamp": "2026-01-08T15:52:42.413467",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "e29d214c-47c0-4823-8498-ceb0aa0efb9a",
+        "timestamp": "2026-01-08T15:52:42.471648",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "b452a9e5-7256-4008-885a-fb870724ffbf",
+        "timestamp": "2026-01-08T15:52:42.531344",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "9fe8c40e-c2be-4148-900d-b69a06cfe3c6",
+        "timestamp": "2026-01-08T15:52:42.586345",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "93ac6f38-c8b3-443e-923a-6a7e727bff44",
+        "timestamp": "2026-01-08T15:52:42.645619",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "2c52c829-2f58-4db8-9752-a64f8d4a2e71",
+        "timestamp": "2026-01-08T15:52:42.697928",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "c15322e6-94de-465a-9c00-31831c728fc3",
+        "timestamp": "2026-01-08T15:52:42.753771",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "4f2786e3-afb2-4f33-83f0-6dea6d9a5ca4",
+        "timestamp": "2026-01-08T15:52:42.816137",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "b96d3f99-9365-47c1-9091-ce47cdf480ad",
+        "timestamp": "2026-01-08T15:52:42.870758",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "dbb13bc5-0777-4e25-9b6b-8f64974bc74e",
+        "timestamp": "2026-01-08T15:52:42.924569",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "eabe7194-8de3-4374-b787-2ab157ee97fb",
+        "timestamp": "2026-01-08T15:52:42.979891",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "89f62d71-537e-4d3d-8ce3-a74015c80542",
+        "timestamp": "2026-01-08T15:52:43.040145",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "87a07a74-f142-4cb6-b3d3-8f5e88a49610",
+        "timestamp": "2026-01-08T15:52:43.098716",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "023ae6d8-24fd-4760-b753-522a0a7f2969",
+        "timestamp": "2026-01-08T15:52:43.153039",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "3dc486fc-77fd-4a57-b36b-85f0d57a3712",
+        "timestamp": "2026-01-08T15:52:43.211368",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "1586be11-ffa9-476b-8736-e4b176f47d8c",
+        "timestamp": "2026-01-08T15:52:43.278291",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "88567106-168e-4101-9a9e-331ae8c4add5",
+        "timestamp": "2026-01-08T15:52:43.336544",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "c1c638c3-ff68-41fb-b45f-b87d67c20dc6",
+        "timestamp": "2026-01-08T15:52:43.509515",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "42822e87-1959-4757-a309-f26dbeca0fab",
+        "timestamp": "2026-01-08T15:52:43.578206",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "999f55f5-6be7-4fa6-a249-288ec984bb26",
+        "timestamp": "2026-01-08T15:52:43.615826",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "cee0c2b2-b5ad-4991-88ff-cefdf86ea296",
+        "timestamp": "2026-01-08T15:52:43.651605",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "58650c7b-ad20-4f78-a40d-9818179601ee",
+        "timestamp": "2026-01-08T15:52:43.704951",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "4793b61a-c218-4488-a093-66b5db6541f5",
+        "timestamp": "2026-01-08T15:52:43.732763",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "a2923c08-adc1-4903-a94d-ee3f210446c2",
+        "timestamp": "2026-01-08T15:52:43.768448",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "81075b0b-1350-4e43-818a-40a807a62fc9",
+        "timestamp": "2026-01-08T15:52:43.798854",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "bbfbbd42-145e-4d75-af51-c7b534405078",
+        "timestamp": "2026-01-08T15:52:43.834498",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "00276125-f844-455a-b9f3-334541ac4cd2",
+        "timestamp": "2026-01-08T15:52:43.867743",
+        "agent": "Auditor",
+        "model": "fake-llm",
+        "action": "CODE_ANALYSIS",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyze this Python file carefully.\n- Read the code and identify:\n  - Bugs\n  - Syntax errors\n  - Logical errors\n  - Missing tests\nRespond in a comprehensive and structured way so the Fixer agent can clearly follow your instructions.\n",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "47d5c720-089d-42b9-a491-07de7865fdf2",
+        "timestamp": "2026-01-08T15:52:43.899008",
+        "agent": "Fixer",
+        "model": "fake-llm",
+        "action": "FIX",
+        "details": {
+            "input_prompt": "Act like a Python expert and analyse this python file and the refactoring plan carefully\nreads the plan step by step with no missing detail\nmodifies the code file by file following the plan and the errors detected \nRespond in a structured and clear way so the changes can be applied automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
+    },
+    {
+        "id": "715ff8ef-f2bb-40dc-9e9b-c4d2fa320ec6",
+        "timestamp": "2026-01-08T15:52:43.944600",
+        "agent": "Judge",
+        "model": "fake-llm",
+        "action": "DEBUG",
+        "details": {
+            "input_prompt": "Act like a Python expert and a Tester expert\nRun pytest on this Python file and return the result. \nif all tests pass, return \"SUCCESS\" \nIf any test fails, return \"FAIL\" and include the errors in a structured way. \nDo not make any code modifications. \nRespond clearly so it can be interpreted automatically.",
+            "output_response": "SIMULATED RESPONSE"
+        },
+        "status": "SUCCESS"
     }
 ]

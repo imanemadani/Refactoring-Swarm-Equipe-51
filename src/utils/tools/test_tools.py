@@ -1,15 +1,14 @@
 import subprocess
-
+# Utility function to run pytest on a specified directory and return structured results.
 def run_pytest(target_dir: str) -> dict:
-    # Run pytest on the specified target directory and return the results as a dictionary.
     result = subprocess.run(
-        ["pytest", target_dir],
+        ["pytest", target_dir, "--tb=short", "--disable-warnings"],
         capture_output=True,
         text=True
     )
     return {
-        "stdout": result.stdout, # The standard output from pytest
-        "stderr": result.stderr, # The standard error from pytest
-        "returncode": result.returncode, # The return code of the pytest command
-        "success": result.returncode == 0 # Boolean indicating if tests passed
+        "success": result.returncode == 0,
+        "stdout": result.stdout.splitlines(),
+        "stderr": result.stderr.splitlines(),
+        "returncode": result.returncode
     }
