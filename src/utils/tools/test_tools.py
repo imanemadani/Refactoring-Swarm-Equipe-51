@@ -8,7 +8,11 @@ def run_pytest(target_dir: str) -> dict:
     )
     return {
         "success": result.returncode == 0,
+        # Indicates whether the tests passed (0) or failed (non-zero)
         "stdout": result.stdout.splitlines(),
+        # Splits the standard output into a list of lines (Human-readable)
         "stderr": result.stderr.splitlines(),
+        # Errors from pytest itself as a list of lines
         "returncode": result.returncode
+        # 0 means success, non-zero means failure from pytest
     }
