@@ -1,46 +1,39 @@
 import os
+import requests
+import json
 from dotenv import load_dotenv
 
-# Load variables from .env into environment
 load_dotenv()
 
-
-class GeminiClient:
-    """
-    Maroua:)Toolsmith utility:
-    - Wraps Gemini API access
-    - Exposes a single `send()` method
-    - Can be mocked or real without changing agents // for now mocked later when Gemini API is available real API calls
-    """
-
+class LlamaClient:
     def __init__(self):
-        self.api_key = os.getenv("GOOGLE_API_KEY")  # Gemini API key
-
-        if not self.api_key:
-            raise ValueError(
-                "GOOGLE_API_KEY not found. "
-                "Make sure it exists in the .env file."
-            )
+        self.api_url = "https://openrouter.ai/api/v1/chat/completions"
+        self.api_key = os.getenv("OPENROUTER_API_KEY")
 
     def send(self, prompt: str, code: str) -> str:
-        """
-        This method is called by:
-        - AuditorAgent
-        - FixerAgent
-        - JudgeAgent
+        print(f"🦙 OpenRouter is processing...")
+        
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "http://localhost:3000", # Optional but good for OpenRouter
+            "X-Title": "Refactoring Swarm"
+        }
 
-        For now: MOCKED response
-        Later: real Gemini API call
-        """
+        payload = {
+            "model": "google/gemini-2.0-flash-001", 
+            "messages": [
+                {"role": "user", "content": f"{prompt}\n\nCODE:\n{code}"}
+            ]
+        }
 
-        # SECURITY: never print the key
-        print("[GeminiClient] Gemini API called (mock mode)")
-
-        # MOCK RESPONSE (temporary)
-        return (
-            "MOCK GEMINI RESPONSE:\n"
-            "- Fix indentation\n"
-            "- Rename function to snake_case\n"
-            "- Add docstring\n"
-            "- Replace print with logging"
-        )
+        try:
+            response = requests.post(self.api_url, headers=headers, data=json.dumps(payload))
+            
+            if response.status_code == 200:
+                result = response.json()
+                return result["choices"][0]["message"]["content"]
+            else:
+                return f"OPENROUTER_ERROR: {response.status_code} - {response.text}"
+        except Exception as e:
+            return f"CONNECTION_ERROR: {e}"
