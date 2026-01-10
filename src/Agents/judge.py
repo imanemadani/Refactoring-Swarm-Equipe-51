@@ -24,4 +24,4 @@ class JudgeAgent:
             status="SUCCESS"
         )
 
-        return test_result
+        return {"status": "SUCCESS", "details": test_result}
