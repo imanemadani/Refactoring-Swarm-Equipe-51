@@ -19,3 +19,6 @@ def write_file(file_path: str, content: str):
         raise PermissionError("Write outside sandbox forbidden")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
+
+
+
