@@ -1,5 +1,8 @@
 import argparse # listen for instructions from the terminal
 import os, shutil # allow us to touch files and look into folders on the system (os.path.exists,os.listdir,os.path.join,...)
+import re
+import subprocess
+
 
 # Path check: This looks inside the /src folder for the logger and the enum
 from src.utils.logger import log_experiment, ActionType
@@ -20,6 +23,22 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--target_dir",type=str,required=True, help="Directory containing Python files to audit/fix/judge") 
 #reads the argument from the command line --> accessed via:args.target_dir
 args = parser.parse_args()
+
+
+
+def run_pylint_analysis(target_path: str):
+    """Runs pylint and extracts the numerical score."""
+    result = subprocess.run(
+        ["pylint", target_path, "--score=y"],
+        capture_output=True,
+        text=True
+    )
+    # Search for the score pattern in the output
+    score_match = re.search(r"Your code has been rated at ([0-9.]+)/10", result.stdout)
+    score = float(score_match.group(1)) if score_match else 0.0
+    
+    return score, result.stdout # Returns the number and the full text report
+
 
 
 def get_python_files(target_dir):
@@ -132,6 +151,11 @@ def orchestrate_swarm(target_dir):
         # Copy original to working sandbox
         shutil.copy(file_path, working_file)
 
+        # 1. Run Pylint on the original messy code
+        initial_score, initial_report = run_pylint_analysis(working_file)
+        print(f"📊 Initial Pylint Score for {file_name}: {initial_score}/10")
+        # ---------------------
+
         print(f"\nProcessing file: {file_path}")
         attempts = 0
 
@@ -173,7 +197,9 @@ def orchestrate_swarm(target_dir):
             if  test_result["status"] == "SUCCESS":
                 # Only overwrite original if test_result is successful
                 shutil.copy(working_file, file_path)
-
+                final_score, _ = run_pylint_analysis(working_file)
+            
+                print(f"📈 Quality Improvement: {initial_score}/10 -> {final_score}/10")
                 print(f"{file_name} passed tests after {attempts + 1} attempt(s).")
                 break  # file is fixed, move to next file
             else:
