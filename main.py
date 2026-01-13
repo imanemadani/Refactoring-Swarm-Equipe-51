@@ -10,7 +10,7 @@ from src.Agents.auditor import AuditorAgent    # prompt engineer
 from src.Agents.fixer import FixerAgent  # prompt engineer
 from src.Agents.judge import JudgeAgent  # prompt engineer
 from src.utils.tools.analysis_tools import run_pylint
-
+from src.utils.validate_logs import validate_logs
 
 SANDBOX_DIR = "./sandbox/workspace"# To preserve the original code in sandbox until the correct version we copy it to the original file
 os.makedirs(SANDBOX_DIR, exist_ok=True)
@@ -40,7 +40,6 @@ def get_python_files(target_dir):
     #return the list
     return files
 
-
 def run_auditor(file_path, llm_client, pylint_report):
     print(f"The auditor is analysing the file : {file_path}")
 
@@ -54,10 +53,9 @@ def run_auditor(file_path, llm_client, pylint_report):
 
     input_data = f"CODE:\n{code_content}\n\nPYLINT REPORT:\n{pylint_report}"
     # initialize the Auditor
-    auditor = AuditorAgent(llm_client=llm_client)
+    auditor = AuditorAgent(llm_client=llm_client)  
     
-    return auditor.analyze(input_data)
-
+    return auditor.analyze(code_content, pylint_report)
 
 def run_fixer(file_path, plan, llm_client):    
     print(f"The fixer is applying the plan to the file: {file_path}")
@@ -70,57 +68,66 @@ def run_fixer(file_path, plan, llm_client):
         raise e
 
     if isinstance(plan, str):
-        # Cleans various markdown code block formats
         plan = plan.replace("```json", "").replace("```JSON", "").replace("```", "").strip()
 
-
     # Initialize the Fixer agent
-    fixer = FixerAgent(llm_client=llm_client)  
+    fixer = FixerAgent(llm_client=llm_client)
 
-    # Send code + plan to the fixer 
-    #i need to not make it json 
+    # Apply fix only once
     fixed_code = fixer.fix(code_content, plan)
 
-    # NEW FIX: Clean markdown backticks from the fixed code itself
-    if isinstance(fixed_code, str):
-        fixed_code = fixed_code.replace("```python", "").replace("```", "").strip()
+    # 🔒 Ensure fixed_code is always a string
+    if isinstance(fixed_code, dict):
+        if "code" in fixed_code:
+            fixed_code = fixed_code["code"]
+        else:
+            print("⚠️ Fixer returned dict without 'code'. Using original code")
+            fixed_code = code_content
 
+    if not isinstance(fixed_code, str) or len(fixed_code.strip()) == 0:
+        print("⚠️ Fixer returned invalid type. Using original code")
+        fixed_code = code_content
 
-    # SAFETY CHECK: Don't write if the AI returned an error or empty string
-    if not fixed_code or "OPENROUTER_ERROR" in fixed_code or len(fixed_code) < 1:
-        print(f"⚠️ Warning: Fixer returned invalid code. Skipping write.")
-        return code_content # Return original code so we don't break the file
+    # Clean markdown artifacts
+    fixed_code = fixed_code.replace("```python", "").replace("```", "").strip()
 
-    # Write the fixed code back so Judge tests the new version
+    # Ensure ends with newline
+    if not fixed_code.endswith("\n"):
+        fixed_code += "\n"
+
+    # 🔒 Minimal syntax check
     try:
-        write_file(file_path, fixed_code)
+        compile(fixed_code, "<string>", "exec")
     except Exception as e:
-        print(f"Failed to write {file_path}: {e}")
-        raise e
+        print(f"⚠️ Fixed code has syntax errors: {e}. Using original code")
+        fixed_code = code_content
 
-    # Return the fixed code
+    # Write to file
+    write_file(file_path, fixed_code)
     return fixed_code
-
 
 def run_judge(file_path, llm_client):
     print(f"The judge is running tests on the file: {file_path}")
 
-    # Read file content
     try:
         code_content = read_file(file_path)
     except Exception as e:
         print(f"Failed to read {file_path}: {e}")
         raise e
 
-    # Initialize the Judge agent
+    # Defensive check
+    if not isinstance(code_content, str) or len(code_content.strip()) == 0:
+        return {"status": "FAILURE", "details": "Invalid or empty code passed to Judge"}
+
+    # Initialize Judge
     judge = JudgeAgent(llm_client=llm_client)
 
-    # Send code to the judge
-    test_result = judge.judge(code_content)
-
-    # Return the test result
-    return test_result
-
+    # 🔒 If judge returns a dict, return it directly; else, wrap properly
+    result = judge.judge(code_content)
+    if isinstance(result, dict):
+        return result  # already structured
+    else:
+        return {"status": "SUCCESS", "details": str(result)}
 
 def orchestrate_swarm(target_dir):
    
@@ -162,7 +169,7 @@ def orchestrate_swarm(target_dir):
                 attempts += 1
                 continue  # Move to next attempt
                         
-            print(f"Audit plan:\n{plan}")  # i think it will be removed , but just as cheking 
+            # print(f"Audit plan:\n{plan}")  # i think it will be removed , but just as cheking 
 
 
             # 4b. Run Fixer to apply the plan
@@ -172,7 +179,7 @@ def orchestrate_swarm(target_dir):
                 print(f"Fixer failed on {file_name}: {e}")
                 attempts += 1
                 continue
-            print(f"Fixed code returned by fixer (first 200 chars):\n{fixed_code[:200]}")
+            # print(f"Fixed code returned by fixer (first 200 chars):\n{fixed_code[:200]}")
 
             # 4c. Run Judge to test the fixed code
             try:
@@ -204,3 +211,4 @@ def orchestrate_swarm(target_dir):
 
 if __name__ == "__main__":
     orchestrate_swarm(args.target_dir)
+    validate_logs()

@@ -21,10 +21,8 @@ class JudgeAgent:
         os.makedirs(sandbox_dir, exist_ok=True)
 
         # 4. Write the code and the tests into the sandbox folder
-    
         with open(os.path.join(sandbox_dir, "test_code.py"), "w", encoding="utf-8") as f:
             f.write(test_code)
-
 
         # 5. Run pytest on the WHOLE sandbox directory
         try:
