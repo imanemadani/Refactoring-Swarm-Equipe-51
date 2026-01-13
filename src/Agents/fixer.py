@@ -7,29 +7,28 @@ class FixerAgent:
         self.llm = llm_client
         self.model_name = model_name
 
-    def fix(self, code: str, plan: dict) -> str:
-        """
-        Apply a structured fix plan to Python code using the LLM.
-
-        Args:
-            code (str): The Python code to fix.
-            plan (dict): JSON-structured fix plan from AuditorAgent.
-
-        Returns:
-            str: Corrected Python code.
-        """
+    def fix(self, code: str, plan) -> str:
         prompt = FIXER_PROMPT
 
-        # Ensure plan is a JSON string
-        plan_str = json.dumps(plan, indent=2)
+        if isinstance(plan, dict):
+            plan_str = json.dumps(plan, indent=2)
+        else:
+            plan_str = str(plan)
 
-        # Combine code + plan for LLM input
+        # Clean markdown from plan
+        plan_str = plan_str.replace("```json", "").replace("```", "").strip()
+
         input_text = f"{code}\n\n# Fix plan:\n{plan_str}"
-
-        # Send prompt + input to LLM
         fixed_code = self.llm.send(prompt, input_text)
 
-        # Log using Quality Manager
+        # Clean markdown from fixed code
+        if isinstance(fixed_code, str):
+            fixed_code = fixed_code.replace("```python", "").replace("```", "").strip()
+
+        # SAFETY: fallback to original code if invalid
+        if not fixed_code or "OPENROUTER_ERROR" in fixed_code or len(fixed_code) < 1:
+            return code
+
         log_experiment(
             agent_name="Fixer",
             model_used=self.model_name,
@@ -44,3 +43,4 @@ class FixerAgent:
         )
 
         return fixed_code
+
