@@ -1,7 +1,7 @@
 from src.Prompts.Prompts import JUDGE_PROMPT
 from src.utils.logger import log_experiment, ActionType
-from src.utils.sandbox import run_in_sandbox  # hypothetical utility
-from src.utils.ptest import ptest  # your function for generating pytest tests
+from sandbox import run_in_sandbox  # hypothetical utility
+from src.utils.tools.test_tools import run_pytest  # your function for generating run_pytest tests
 
 class JudgeAgent:
     def __init__(self, llm_client, model_name="gpt-4"):
@@ -10,7 +10,7 @@ class JudgeAgent:
 
     def judge(self, code: str) -> str:
         """
-        Generate pytest-based tests for the corrected code, put them in a sandbox,
+        Generate run_pytest-based tests for the corrected code, put them in a sandbox,
         run them, and return only 'SUCCESS' or 'FAILURE'.
 
         Args:
@@ -29,12 +29,12 @@ class JudgeAgent:
         try:
             result = run_in_sandbox(
                 code_files={"corrected_code.py": code, "test_code.py": test_code},
-                test_runner=ptest  # this will execute pytest on test_code.py
+                test_runner=run_pytest  # this will execute run_pytest on test_code.py
             )
         except Exception as e:
             result = "FAILURE"
 
-        # Step 3: Determine success/failure based on pytest results
+        # Step 3: Determine success/failure based on run_pytest results
         if isinstance(result, dict):
             # If ptest returns structured info
             test_status = "SUCCESS" if result.get("all_passed", False) else "FAILURE"
@@ -56,4 +56,4 @@ class JudgeAgent:
             status="SUCCESS"
         )
 
-        return {"status": "SUCCESS", "details": test_result}
+        return {"status": test_status, "details": str(result)}
