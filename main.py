@@ -9,6 +9,8 @@ from src.utils.llm_client import LlamaClient #toolsmith
 from src.Agents.auditor import AuditorAgent    # prompt engineer
 from src.Agents.fixer import FixerAgent  # prompt engineer
 from src.Agents.judge import JudgeAgent  # prompt engineer
+from src.utils.tools.analysis_tools import run_pylint
+
 
 SANDBOX_DIR = "./sandbox/workspace"# To preserve the original code in sandbox until the correct version we copy it to the original file
 os.makedirs(SANDBOX_DIR, exist_ok=True)
@@ -39,7 +41,7 @@ def get_python_files(target_dir):
     return files
 
 
-def run_auditor(file_path, llm_client):
+def run_auditor(file_path, llm_client, pylint_report):
     print(f"The auditor is analysing the file : {file_path}")
 
     #read file content
@@ -49,19 +51,17 @@ def run_auditor(file_path, llm_client):
         print(f"Failed to read {file_path}: {e}")
         raise e  # let the outer loop catch it
 
+
+    input_data = f"CODE:\n{code_content}\n\nPYLINT REPORT:\n{pylint_report}"
     # initialize the Auditor
     auditor = AuditorAgent(llm_client=llm_client)
     
-    # sent content to Auditor
-    audit_report = auditor.analyze(code_content)
-    
-    # return the plan
-    return audit_report
+    return auditor.analyze(input_data)
 
 
 def run_fixer(file_path, plan, llm_client):    
     print(f"The fixer is applying the plan to the file: {file_path}")
-   
+    
     # Read file content
     try:
         code_content = read_file(file_path)
@@ -69,11 +69,21 @@ def run_fixer(file_path, plan, llm_client):
         print(f"Failed to read {file_path}: {e}")
         raise e
 
+    if isinstance(plan, str):
+        # Cleans various markdown code block formats
+        plan = plan.replace("```json", "").replace("```JSON", "").replace("```", "").strip()
+
+
     # Initialize the Fixer agent
     fixer = FixerAgent(llm_client=llm_client)  
 
-    # Send code + plan to the fixer
+    # Send code + plan to the fixer 
+    #i need to not make it json 
     fixed_code = fixer.fix(code_content, plan)
+
+    # NEW FIX: Clean markdown backticks from the fixed code itself
+    if isinstance(fixed_code, str):
+        fixed_code = fixed_code.replace("```python", "").replace("```", "").strip()
 
 
     # SAFETY CHECK: Don't write if the AI returned an error or empty string
@@ -139,9 +149,14 @@ def orchestrate_swarm(target_dir):
         while attempts < MAX_ATTEMPTS:
             print(f"Attempt {attempts + 1}/{MAX_ATTEMPTS} for {file_name}")
 
+            # Run pylint to get the report for the Auditor
+            pylint_data = run_pylint(working_file)
+            # We convert the list of lines into one big string
+            initial_report = "\n".join(pylint_data["stdout"])
+
             # 4a. Run Auditor to get the plan on the working file
             try:
-                plan = run_auditor(working_file, llm_client)
+                plan = run_auditor(working_file, llm_client, initial_report)
             except Exception as e:
                 print(f"Auditor failed on {file_name}: {e}")
                 attempts += 1
@@ -169,12 +184,14 @@ def orchestrate_swarm(target_dir):
             print(f"Test result: {test_result}")
 
             # 4d. Check if tests passed
-            #in ilham's file : return {"status": "SUCCESS", "details": test_result}
             if  test_result["status"] == "SUCCESS":
                 # Only overwrite original if test_result is successful
                 shutil.copy(working_file, file_path)
-
-                print(f"{file_name} passed tests after {attempts + 1} attempt(s).")
+                # Get the score from the pylint_data we ran at the start of this attempt
+                score = pylint_data.get("score", "N/A")
+                
+                print(f"✅ {file_name} passed tests after {attempts + 1} attempt(s).")
+                print(f"📈 Final Pylint Score: {score}/10")
                 break  # file is fixed, move to next file
             else:
                 print(f"{file_name} failed tests. Retrying...")
