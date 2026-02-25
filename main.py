@@ -68,7 +68,6 @@ def run_auditor(file_path, llm_client, pylint_report):
 
     auditor = AuditorAgent(llm_client=llm_client)
 
-    # ✅ Matches your agent: analyze(code, pylint_output)
     plan = auditor.analyze(code_content, pylint_report)
 
     # Ensure dict
@@ -91,7 +90,6 @@ def run_fixer(file_path, plan, llm_client):
         print("⚠️ Empty code content; skipping fixer.")
         return code_content
 
-    # Clean plan (stringify if needed)
     if isinstance(plan, dict):
         plan_str = json.dumps(plan, indent=2, ensure_ascii=False)
     else:
@@ -100,10 +98,8 @@ def run_fixer(file_path, plan, llm_client):
 
     fixer = FixerAgent(llm_client=llm_client)
 
-    # ✅ Matches your agent: fix(code, plan)
     fixed_code = fixer.fix(code_content, plan)
 
-    # Extra safety
     if isinstance(fixed_code, dict):
         fixed_code = fixed_code.get("code", code_content)
 
@@ -116,12 +112,10 @@ def run_fixer(file_path, plan, llm_client):
     if not fixed_code.endswith("\n"):
         fixed_code += "\n"
 
-    # Syntax gate
     if not safe_compile(fixed_code):
         print("⚠️ Fixed code failed compile check. Using original code.")
         fixed_code = code_content
 
-    # Write to file
     write_file(file_path, fixed_code)
     return fixed_code
 
