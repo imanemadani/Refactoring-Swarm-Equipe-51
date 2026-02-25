@@ -8,3 +8,4 @@ python-dotenv==1.0.1
 pandas==2.2.0
 colorama==0.4.6
 requests==2.31.0
+autopep8==2.0.4
